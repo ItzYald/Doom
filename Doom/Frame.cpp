@@ -9,17 +9,12 @@ Frame::Frame()
 	nextables.push_back(player);
 	drawables.push_back(player);
 
-	//miniMap = std::make_shared<MiniMap>(player->getPosition());
-	miniMap = std::make_shared<MiniMap>([&]() { return player->getPosition(); });
-	//miniMap = std::make_shared<MiniMap>(std::bind(Player::getPosition, player));
-
-	//MiniMap lol = MiniMap([&]() { return player->getPosition(); });
-
-	//MiniMap lol = MiniMap(std::bind(Player::getPosition, player));
-
+	miniMap = std::make_shared<MiniMap>(
+		[&]() { return player->getPosition(); },
+		[&]() { return player->getAngle(); }
+	);
 	nextables.push_back(miniMap);
 	drawables.push_back(miniMap);
-
 }
 
 float Frame::distance(sf::Vector2f position1, sf::Vector2f position2)

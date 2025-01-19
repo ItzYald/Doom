@@ -12,12 +12,13 @@ class Player : public sf::Drawable, public Nextable, public PositionHavier
 
 	float angle;
 
-	const float speed = 2;
+	const float speed = 0.1;
 
 public:
 	Player();
 
 	sf::Vector2f getPosition();
+	float getAngle();
 
 	void move();
 

@@ -17,6 +17,11 @@ sf::Vector2f Player::getPosition()
 	return position;
 }
 
+float Player::getAngle()
+{
+	return angle;
+}
+
 void Player::move()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -35,6 +40,10 @@ void Player::move()
 	{
 		angle -= 0.1f;
 	}
+	if (position.x > 20) position.x = 20;
+	if (position.y > 20) position.y = 20;
+	if (position.x < 0) position.x = 0;
+	if (position.y < 0) position.y = 0;
 	shape.setPosition(position);
 }
 
@@ -45,14 +54,6 @@ void Player::next()
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	sf::Vertex line[2]{
-		sf::Vertex(position),
-		sf::Vertex(position + sf::Vector2f(30 * sin(angle), 30 * cos(angle)))
-	};
-
-	target.draw(line, 2, sf::Lines);
-
-	target.draw(shape, states);
 }
 
 

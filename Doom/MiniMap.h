@@ -12,15 +12,18 @@ class MiniMap : public Nextable, public sf::Drawable
 {
 	std::shared_ptr<sf::CircleShape> playerShape;
 
+	std::shared_ptr<sf::RectangleShape> borderShape;
+
 	std::vector<std::shared_ptr<sf::Drawable>> drawables;
 
-	//std::shared_ptr<sf::Vector2f> playerPosition;
-	//sf::Vector2f(*getPlayerPosition)();
 	std::function<sf::Vector2f()> getPlayerPosition;
+	std::function<float()> getPlayerAngle;
 
 public:
 
-	MiniMap(std::function<sf::Vector2f()> _getPlayerPosition);
+	MiniMap(
+		std::function<sf::Vector2f()> _getPlayerPosition,
+		std::function<float()> _getPlayerAngle);
 
 	void next() override;
 
