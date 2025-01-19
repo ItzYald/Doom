@@ -10,8 +10,14 @@ class Player : public sf::Drawable, public Nextable, public PositionHavier
 {
 	sf::CircleShape shape;
 
+	float angle;
+
+	const float speed = 2;
+
 public:
 	Player();
+
+	sf::Vector2f getPosition();
 
 	void move();
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <functional>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -9,6 +10,7 @@
 #include "Nextable.h"
 
 #include "Player.h"
+#include "MiniMap.h"
 
 #include "GameCycle.h"
 
@@ -16,6 +18,7 @@ class Frame : public Nextable, public sf::Drawable
 {
 private:
 	std::shared_ptr<Player> player;
+	std::shared_ptr<MiniMap> miniMap;
 
 	std::vector<std::shared_ptr<sf::Drawable>> drawables;
 	std::vector<std::shared_ptr<Nextable>> nextables;

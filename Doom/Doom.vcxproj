@@ -133,6 +133,7 @@
     <ClCompile Include="Doom.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="GameCycle.cpp" />
+    <ClCompile Include="MiniMap.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PositionHavier.cpp" />
   </ItemGroup>
@@ -142,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="Frame.h" />
     <ClInclude Include="GameCycle.h" />
+    <ClInclude Include="MiniMap.h" />
     <ClInclude Include="Nextable.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PositionHavier.h" />
