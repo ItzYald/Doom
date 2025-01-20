@@ -12,7 +12,7 @@ class Player : public sf::Drawable, public Nextable, public PositionHavier
 
 	float angle;
 
-	const float speed = 0.1;
+	const float speed = 0.05f;
 
 public:
 	Player();

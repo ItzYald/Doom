@@ -5,13 +5,28 @@ Frame::Frame()
 	drawables = std::vector<std::shared_ptr<sf::Drawable>>();
 	nextables = std::vector<std::shared_ptr<Nextable>>();
 
+	map = std::vector<std::vector<int>>
+	{
+		{0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+		{0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+		{0, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{0, 0, 0, 1, 1, 0, 0, 0, 0, 1},
+		{0, 0, 0, 1, 1, 0, 0, 0, 0, 1},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 1}
+	};
+
 	player = std::make_shared<Player>();
 	nextables.push_back(player);
 	drawables.push_back(player);
 
 	miniMap = std::make_shared<MiniMap>(
 		[&]() { return player->getPosition(); },
-		[&]() { return player->getAngle(); }
+		[&]() { return player->getAngle(); },
+		map
 	);
 	nextables.push_back(miniMap);
 	drawables.push_back(miniMap);

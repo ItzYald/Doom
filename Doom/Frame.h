@@ -17,6 +17,8 @@
 class Frame : public Nextable, public sf::Drawable
 {
 private:
+	std::vector<std::vector<int>> map;
+
 	std::shared_ptr<Player> player;
 	std::shared_ptr<MiniMap> miniMap;
 
@@ -44,10 +46,8 @@ private:
 		sf::Vector2f position21,
 		sf::Vector2f position22);
 
-
 public:
 	Frame();
-
 
 	void next();
 
