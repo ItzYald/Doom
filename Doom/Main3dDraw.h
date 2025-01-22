@@ -29,7 +29,18 @@ private:
 
 	sf::Vector2f setIntersectionPosistion(int rayNumber, sf::Vector2f interSectionPosition);
 
-	sf::Vector2f checkIntersection(sf::Vector2f cubePosition);
+	void checkIntersectionRightDown(sf::Vector2f cubePosition,
+		float k, float b, float pointY1, float pointY2, int i);
+	void checkIntersectionRightUp(sf::Vector2f cubePosition,
+		float k, float b, float pointY1, float pointY2, int i);
+	void checkIntersectionLeftDown(sf::Vector2f cubePosition,
+		float k, float b, float pointY1, float pointY2, int i);
+	void checkIntersectionLeftUp(sf::Vector2f cubePosition,
+		float k, float b, float pointY1, float pointY2, int i);
+
+	void checkIntersection(sf::Vector2f cubePosition);
+
+	void generateVerticalRectabgles();
 
 public:
 	Main3dDraw(
@@ -38,9 +49,10 @@ public:
 		std::function<sf::Vector2f()> _getPlayerPixelPosition,
 		std::vector<std::vector<int>>& _map);
 
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	void next() override;
+
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 };
 
