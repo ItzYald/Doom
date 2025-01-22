@@ -98,13 +98,44 @@ sf::Vector2f Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 		}
 		else
 		{
-			if (rays[i].y < getPlayerPosition().y)
+			if (rays[i].x > getPlayerPosition().x)
 			{
+				if (pointY1 < cubePosition.y ||
+					getPlayerPosition().y < cubePosition.y ||
+					pointY2 > cubePosition.y + 1 ||
+					getPlayerPosition().x > cubePosition.x + 1) continue;
 
+				if (pointY1 >= cubePosition.y + 1 && pointY2 < cubePosition.y + 1)
+				{
+					rays[i] = setIntersectionPosistion(i,
+						sf::Vector2f((cubePosition.y + 1 - b) / k, cubePosition.y + 1));
+				}
+				if (pointY1 > cubePosition.y && pointY1 < cubePosition.y + 1)
+				{
+					rays[i] = setIntersectionPosistion(i,
+						sf::Vector2f(cubePosition.x, pointY1));
+				}
 			}
 			else
 			{
-
+				/*if (i == 1)
+				{
+					intersectionsPositions.push_back(sf::Vector2f(cubePosition.x, pointY1));
+					intersectionsPositions.push_back(sf::Vector2f(cubePosition.x + 1, pointY2));
+				}*/
+				if (pointY2 > cubePosition.y + 1 ||
+					getPlayerPosition().y > cubePosition.y + 1 ||
+					getPlayerPosition().x < cubePosition.x) continue;
+				if (pointY2 < cubePosition.y && pointY1 > cubePosition.y)
+				{
+					rays[i] = setIntersectionPosistion(i,
+						sf::Vector2f((cubePosition.y - b) / k, cubePosition.y));
+				}
+				if (pointY2 < cubePosition.y + 1 && pointY2 > cubePosition.y)
+				{
+					rays[i] = setIntersectionPosistion(i,
+						sf::Vector2f(cubePosition.x + 1, pointY2));
+				}
 			}
 		}
 
