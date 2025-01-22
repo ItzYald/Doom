@@ -8,8 +8,6 @@ Main3dDraw::Main3dDraw(
 	std::function<sf::Vector2f()> _getPlayerPixelPosition,
 	std::vector<std::vector<int>>& _map)
 {
-	intersectionsPositions = std::vector<sf::Vector2f>();
-
 	drawables = std::vector<std::shared_ptr<sf::Drawable>>();
 
 	rays = std::vector<sf::Vector2f>();
@@ -48,14 +46,10 @@ sf::Vector2f Main3dDraw::setIntersectionPosistion(int rayNumber, sf::Vector2f in
 
 sf::Vector2f Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 {
-	//std::cout << std::endl;
 	for (size_t i = 0; i < rays.size(); i++)
 	{
 		float k = (rays[i].y - getPlayerPosition().y) / (rays[i].x - getPlayerPosition().x);
 		float b = -getPlayerPosition().x * k + getPlayerPosition().y;
-
-		/*if (i == 1)
-			std::cout << (int)(k * 10) << " " << (int)(b * 10);*/
 
 		float pointY1 = cubePosition.x * k + b;
 		float pointY2 = (cubePosition.x + 1) * k + b;
@@ -118,11 +112,6 @@ sf::Vector2f Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 			}
 			else
 			{
-				/*if (i == 1)
-				{
-					intersectionsPositions.push_back(sf::Vector2f(cubePosition.x, pointY1));
-					intersectionsPositions.push_back(sf::Vector2f(cubePosition.x + 1, pointY2));
-				}*/
 				if (pointY2 > cubePosition.y + 1 ||
 					getPlayerPosition().y > cubePosition.y + 1 ||
 					getPlayerPosition().x < cubePosition.x) continue;
@@ -147,7 +136,6 @@ sf::Vector2f Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 
 void Main3dDraw::next()
 {
-	intersectionsPositions.clear();
 	rays.clear();
 	for (int i = raysQuantity * -1; i < raysQuantity; i++)
 	{
@@ -162,12 +150,9 @@ void Main3dDraw::next()
 			if ((*map)[i][j] == 1)
 			{
 				checkIntersection(sf::Vector2f(j, i));
-				//std::cout << i << " " << j << std::endl;
 			}
 		}
-		//std::cout << std::endl;
 	}
-	//std::cout << std::endl;
 }
 
 void Main3dDraw::draw(sf::RenderTarget& target, sf::RenderStates states) const

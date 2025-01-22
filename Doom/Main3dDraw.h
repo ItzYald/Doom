@@ -16,8 +16,6 @@ private:
 	const int drawableRayLength = 100;
 	const int raysQuantity = 100;
 
-	std::vector<sf::Vector2f> intersectionsPositions;
-
 	std::vector<std::shared_ptr<sf::Drawable>> drawables;
 
 	std::shared_ptr<std::vector<std::vector<int>>> map;
