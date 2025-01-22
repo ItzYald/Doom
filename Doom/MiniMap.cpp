@@ -2,7 +2,7 @@
 
 //MiniMap::MiniMap(sf::Vector2f(*_getPlayerPosition)())
 MiniMap::MiniMap(
-	std::function<sf::Vector2f()> _getPlayerPosition,
+	std::function<sf::Vector2f()> _getPlayerPixelPosition,
 	std::function<float()> _getPlayerAngle,
 	std::vector<std::vector<int>>& _map)
 {
@@ -26,13 +26,14 @@ MiniMap::MiniMap(
 	playerShape->setOrigin(playerShape->getRadius(), playerShape->getRadius());
 	drawables.push_back(playerShape);
 
-	getPlayerPosition = _getPlayerPosition;
+	getPlayerPixelPosition = _getPlayerPixelPosition;
 	getPlayerAngle = _getPlayerAngle;
 }
 
 void MiniMap::next()
 {
-	playerShape->setPosition(getPlayerPosition() * 20.f + sf::Vector2f(0, 520));
+	//playerShape->setPosition(getPlayerPosition() * 20.f + sf::Vector2f(0, 520));
+	playerShape->setPosition(getPlayerPixelPosition());
 }
 
 void MiniMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -57,7 +58,8 @@ void MiniMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	sf::Vertex line[2]{
 		sf::Vertex(playerShape->getPosition()),
 		sf::Vertex(playerShape->getPosition() +
-			sf::Vector2f(30 * sin(getPlayerAngle()), 30 * cos(getPlayerAngle())))
+			sf::Vector2f(60 * sin(getPlayerAngle()), 60 * cos(getPlayerAngle())))
 	};
+	line[1].color = sf::Color::Green;
 	target.draw(line, 2, sf::Lines);
 }

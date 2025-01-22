@@ -5,7 +5,7 @@ Frame::Frame()
 	drawables = std::vector<std::shared_ptr<sf::Drawable>>();
 	nextables = std::vector<std::shared_ptr<Nextable>>();
 
-	map = std::vector<std::vector<int>>
+	std::vector<std::vector<int>> map = std::vector<std::vector<int>>
 	{
 		{0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -19,17 +19,44 @@ Frame::Frame()
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 1}
 	};
 
+	/*0 1
+	0 2
+	0 3
+	0 4
+	0 5
+	0 6
+	0 7
+	0 8
+	0 9
+	3 2
+	4 2
+	5 1
+	7 3
+	7 4
+	8 3
+	8 4*/
+
 	player = std::make_shared<Player>();
 	nextables.push_back(player);
 	drawables.push_back(player);
 
 	miniMap = std::make_shared<MiniMap>(
-		[&]() { return player->getPosition(); },
+		[&]() { return player->getPixelPosition(); },
 		[&]() { return player->getAngle(); },
 		map
 	);
 	nextables.push_back(miniMap);
+
+	main3dDraw = std::make_shared<Main3dDraw>(
+		[&]() { return player->getPosition(); },
+		[&]() { return player->getAngle(); },
+		[&]() { return player->getPixelPosition(); },
+		map
+	);
+	nextables.push_back(main3dDraw);
+	drawables.push_back(main3dDraw);
 	drawables.push_back(miniMap);
+
 }
 
 float Frame::distance(sf::Vector2f position1, sf::Vector2f position2)

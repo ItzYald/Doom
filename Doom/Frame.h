@@ -12,15 +12,16 @@
 #include "Player.h"
 #include "MiniMap.h"
 
+#include "Main3dDraw.h"
+
 #include "GameCycle.h"
 
 class Frame : public Nextable, public sf::Drawable
 {
 private:
-	std::vector<std::vector<int>> map;
-
 	std::shared_ptr<Player> player;
 	std::shared_ptr<MiniMap> miniMap;
+	std::shared_ptr<Main3dDraw> main3dDraw;
 
 	std::vector<std::shared_ptr<sf::Drawable>> drawables;
 	std::vector<std::shared_ptr<Nextable>> nextables;

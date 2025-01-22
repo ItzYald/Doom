@@ -5,9 +5,12 @@
 
 #include "Nextable.h"
 #include "PositionHavier.h"
+#include "Constants.h"
 
 class Player : public sf::Drawable, public Nextable, public PositionHavier
 {
+	sf::Font font;
+
 	sf::CircleShape shape;
 
 	float angle;
@@ -17,6 +20,7 @@ class Player : public sf::Drawable, public Nextable, public PositionHavier
 public:
 	Player();
 
+	sf::Vector2f getPixelPosition();
 	sf::Vector2f getPosition();
 	float getAngle();
 
