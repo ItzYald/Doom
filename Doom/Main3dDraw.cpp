@@ -1,6 +1,6 @@
 #include "Main3dDraw.h"
 
-#define PI 3.1415926535
+constexpr auto PI = 3.1415926535;
 
 Main3dDraw::Main3dDraw(
 	std::function<sf::Vector2f()> _getPlayerPosition,
@@ -139,7 +139,7 @@ void Main3dDraw::next()
 	rays.clear();
 	for (int i = raysQuantity * -1; i < raysQuantity; i++)
 	{
-		float angle = getPlayerAngle() + PI  / raysQuantity / 2 * (i);
+		float angle = getPlayerAngle() + PI / 2 / raysQuantity / 2 * (i);
 		rays.push_back(getPlayerPosition() + sf::Vector2f(rayLength * sin(angle), rayLength * cos(angle)));
 	}
 
@@ -162,14 +162,14 @@ void Main3dDraw::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	std::vector<sf::Vector2f> drawableRays = std::vector<sf::Vector2f>();
 
-	sf::CircleShape shape = sf::CircleShape(5);
+	/*sf::CircleShape shape = sf::CircleShape(5);
 	shape.setOrigin(shape.getRadius(), shape.getRadius());
 
 	for (size_t i = 0; i < intersectionsPositions.size(); i++)
 	{
 		shape.setPosition(intersectionsPositions[i] * 20.f + sf::Vector2f(0, 520));
 		target.draw(shape, states);
-	}
+	}*/
 
 	for (int i = raysQuantity * -1; i < raysQuantity; i++)
 	{
