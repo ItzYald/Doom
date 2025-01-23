@@ -8,18 +8,19 @@
 #include <SFML/Window.hpp>
 
 #include "Nextable.h"
+#include "DrawRaysOnMiniMap.h"
 
 class Main3dDraw : public sf::Drawable, public Nextable
 {
 private:
 	const int rayLength = 100;
 	const int drawableRayLength = 100;
-	const int raysQuantity = 300;
+	const int raysQuantity = 150;
 
 	std::vector<std::shared_ptr<sf::Drawable>> drawables;
 
 	std::shared_ptr<std::vector<std::vector<int>>> map;
-	std::vector<sf::Vector2f> rays;
+	std::shared_ptr<std::vector<sf::Vector2f>> rays;
 	std::vector<float> angles;
 
 	std::vector<std::shared_ptr<sf::RectangleShape>> verticalRectangles;

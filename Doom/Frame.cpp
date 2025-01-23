@@ -19,23 +19,6 @@ Frame::Frame()
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};
 
-	/*0 1
-	0 2
-	0 3
-	0 4
-	0 5
-	0 6
-	0 7
-	0 8
-	0 9
-	3 2
-	4 2
-	5 1
-	7 3
-	7 4
-	8 3
-	8 4*/
-
 	player = std::make_shared<Player>();
 	nextables.push_back(player);
 	drawables.push_back(player);
@@ -121,6 +104,11 @@ sf::Vector2f Frame::checkInterseption(sf::Vector2f position11, sf::Vector2f posi
 	sf::Vector2f interseptionPosition = findIntersection(
 		position11, position12, position21, position22
 	);
+
+	int a[2];
+
+	//a[1];
+	//*(a + 1);
 
 	if (checkPointInQuadrilateral(
 		interseptionPosition,

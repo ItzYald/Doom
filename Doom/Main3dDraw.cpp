@@ -10,7 +10,7 @@ Main3dDraw::Main3dDraw(
 {
 	drawables = std::vector<std::shared_ptr<sf::Drawable>>();
 
-	rays = std::vector<sf::Vector2f>();
+	rays = std::make_shared<std::vector<sf::Vector2f>>();
 	angles = std::vector<float>();
 
 	verticalRectangles = std::vector<std::shared_ptr<sf::RectangleShape>>();
@@ -28,6 +28,11 @@ Main3dDraw::Main3dDraw(
 		drawables.push_back(verticalRectangles[i]);
 	}
 
+	drawables.push_back(std::make_shared<DrawRaysOnMiniMap>(
+		_getPlayerPosition, _getPlayerPixelPosition,
+		raysQuantity, rays
+		));
+
 	map = std::make_shared<std::vector<std::vector<int>>>(_map);
 
 	getPlayerPosition = _getPlayerPosition;
@@ -42,7 +47,6 @@ Main3dDraw::Main3dDraw(
 		}
 		std::cout << std::endl;
 	}
-
 }
 
 float Main3dDraw::length(sf::Vector2f vector)
@@ -54,7 +58,7 @@ void Main3dDraw::generateVerticalRectabgles()
 {
 	for (size_t i = 0; i < verticalRectangles.size(); i++)
 	{
-		if (length(rays[i] - getPlayerPosition()) + 1 >= rayLength)
+		if (length((*rays)[i] - getPlayerPosition()) + 1 >= rayLength)
 		{
 			verticalRectangles[i]->setSize(sf::Vector2f(
 				verticalRectangles[i]->getSize().x, 0));
@@ -63,7 +67,8 @@ void Main3dDraw::generateVerticalRectabgles()
 		{
 			verticalRectangles[i]->setSize(sf::Vector2f(
 				verticalRectangles[i]->getSize().x,
-				600 / length(rays[i] - getPlayerPosition()) / cos(angles[i])));
+				600 / (length((*rays)[i] - getPlayerPosition())
+					* 1)));
 		}
 		
 		verticalRectangles[i]->setOrigin(
@@ -75,12 +80,12 @@ void Main3dDraw::generateVerticalRectabgles()
 
 sf::Vector2f Main3dDraw::setIntersectionPosistion(int rayNumber, sf::Vector2f interSectionPosition)
 {
-	float len1 = length(rays[rayNumber] - getPlayerPosition());
+	float len1 = length((*rays)[rayNumber] - getPlayerPosition());
 	float len2 = length(interSectionPosition - getPlayerPosition());
 	if (len1 > len2)
 		return interSectionPosition;
 	else
-		return rays[rayNumber];
+		return (*rays)[rayNumber];
 }
 
 void Main3dDraw::checkIntersectionRightDown(sf::Vector2f cubePosition,
@@ -91,12 +96,12 @@ void Main3dDraw::checkIntersectionRightDown(sf::Vector2f cubePosition,
 		getPlayerPosition().x > cubePosition.x + 1) return;
 	if (pointY1 < cubePosition.y && pointY2 > cubePosition.y)
 	{
-		rays[i] = setIntersectionPosistion(i,
+		(*rays)[i] = setIntersectionPosistion(i,
 			sf::Vector2f((cubePosition.y - b) / k, cubePosition.y));
 	}
 	else if (pointY1 < cubePosition.y + 1 && pointY1 > cubePosition.y)
 	{
-		rays[i] = setIntersectionPosistion(i,
+		(*rays)[i] = setIntersectionPosistion(i,
 			sf::Vector2f(cubePosition.x, pointY1));
 	}
 }
@@ -110,12 +115,12 @@ void Main3dDraw::checkIntersectionRightUp(sf::Vector2f cubePosition,
 		getPlayerPosition().x > cubePosition.x + 1) return;
 	if (pointY1 >= cubePosition.y + 1 && pointY2 < cubePosition.y + 1)
 	{
-		rays[i] = setIntersectionPosistion(i,
+		(*rays)[i] = setIntersectionPosistion(i,
 			sf::Vector2f((cubePosition.y + 1 - b) / k, cubePosition.y + 1));
 	}
 	else if (pointY1 > cubePosition.y && pointY1 < cubePosition.y + 1)
 	{
-		rays[i] = setIntersectionPosistion(i,
+		(*rays)[i] = setIntersectionPosistion(i,
 			sf::Vector2f(cubePosition.x, pointY1));
 	}
 }
@@ -128,12 +133,12 @@ void Main3dDraw::checkIntersectionLeftDown(sf::Vector2f cubePosition,
 		getPlayerPosition().x < cubePosition.x) return;
 	if (pointY2 < cubePosition.y && pointY1 > cubePosition.y)
 	{
-		rays[i] = setIntersectionPosistion(i,
+		(*rays)[i] = setIntersectionPosistion(i,
 			sf::Vector2f((cubePosition.y - b) / k, cubePosition.y));
 	}
 	else if (pointY2 < cubePosition.y + 1 && pointY2 > cubePosition.y)
 	{
-		rays[i] = setIntersectionPosistion(i,
+		(*rays)[i] = setIntersectionPosistion(i,
 			sf::Vector2f(cubePosition.x + 1, pointY2));
 	}
 }
@@ -147,21 +152,21 @@ void Main3dDraw::checkIntersectionLeftUp(sf::Vector2f cubePosition,
 		getPlayerPosition().x < cubePosition.x) return;
 	if (pointY2 >= cubePosition.y + 1 && pointY1 < cubePosition.y + 1)
 	{
-		rays[i] = setIntersectionPosistion(i,
+		(*rays)[i] = setIntersectionPosistion(i,
 			sf::Vector2f((cubePosition.y + 1 - b) / k, cubePosition.y + 1));
 	}
 	else if (pointY2 < cubePosition.y + 1 && pointY2 > cubePosition.y)
 	{
-		rays[i] = setIntersectionPosistion(i,
+		(*rays)[i] = setIntersectionPosistion(i,
 			sf::Vector2f(cubePosition.x + 1, pointY2));
 	}
 }
 
 void Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 {
-	for (size_t i = 0; i < rays.size(); i++)
+	for (size_t i = 0; i < (*rays).size(); i++)
 	{
-		float k = (rays[i].y - getPlayerPosition().y) / (rays[i].x - getPlayerPosition().x);
+		float k = ((*rays)[i].y - getPlayerPosition().y) / ((*rays)[i].x - getPlayerPosition().x);
 		float b = -getPlayerPosition().x * k + getPlayerPosition().y;
 
 		float pointY1 = cubePosition.x * k + b;
@@ -169,7 +174,7 @@ void Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 		
 		if (k > 0)
 		{
-			if (rays[i].x > getPlayerPosition().x)
+			if ((*rays)[i].x > getPlayerPosition().x)
 				checkIntersectionRightDown(cubePosition,
 					k, b, pointY1, pointY2, i);
 			else
@@ -178,7 +183,7 @@ void Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 		}
 		else
 		{
-			if (rays[i].x > getPlayerPosition().x)
+			if ((*rays)[i].x > getPlayerPosition().x)
 				checkIntersectionRightUp(cubePosition,
 					k, b, pointY1, pointY2, i);
 			else
@@ -190,13 +195,13 @@ void Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 
 void Main3dDraw::next()
 {
-	rays.clear();
+	(*rays).clear();
 	angles.clear();
 	for (int i = raysQuantity * -1; i < raysQuantity; i++)
 	{
-		float angle = getPlayerAngle() + PI / 2 / raysQuantity / 2 * (i);
+		float angle = getPlayerAngle() + PI / 2.f / raysQuantity / 2 * (i);
 		angles.push_back(PI / 2 / raysQuantity / 2 * (i));
-		rays.push_back(getPlayerPosition() + sf::Vector2f(rayLength * sin(angle), rayLength * cos(angle)));
+		(*rays).push_back(getPlayerPosition() + sf::Vector2f(rayLength * sin(angle), rayLength * cos(angle)));
 	}
 
 	for (size_t i = 0; i < (*map).size(); i++)
@@ -212,21 +217,6 @@ void Main3dDraw::next()
 
 void Main3dDraw::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	sf::Vertex line[2];
-	line[0] = sf::Vertex(getPlayerPixelPosition());
-	line[0].color = sf::Color::Red;
-
-	std::vector<sf::Vector2f> drawableRays = std::vector<sf::Vector2f>();
-
-	for (int i = raysQuantity * -1; i < raysQuantity; i++)
-	{
-		drawableRays.push_back((rays[i + raysQuantity] - getPlayerPosition()) * 20.f + line[0].position);
-
-		line[1] = sf::Vertex(drawableRays[i + raysQuantity], sf::Color::Red);
-
-		target.draw(line, 2, sf::Lines);
-	}
-
 	for (auto drawable : drawables)
 	{
 		target.draw(*drawable, states);
