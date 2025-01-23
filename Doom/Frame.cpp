@@ -13,9 +13,9 @@ Frame::Frame()
 		{1, 0, 1, 0, 0, 0, 0, 0, 0, 1},
 		{1, 0, 1, 0, 0, 0, 0, 0, 0, 1},
 		{1, 1, 0, 0, 0, 0, 0, 1, 1, 1},
-		{1, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-		{1, 0, 0, 1, 1, 0, 0, 0, 1, 1},
-		{1, 0, 0, 1, 1, 0, 0, 0, 0, 1},
+		{1, 0, 0, 2, 2, 0, 0, 1, 1, 1},
+		{1, 0, 0, 2, 2, 0, 0, 0, 1, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};
 
@@ -39,7 +39,6 @@ Frame::Frame()
 	nextables.push_back(main3dDraw);
 	drawables.push_back(main3dDraw);
 	drawables.push_back(miniMap);
-
 }
 
 float Frame::distance(sf::Vector2f position1, sf::Vector2f position2)

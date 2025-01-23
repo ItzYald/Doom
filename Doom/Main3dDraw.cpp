@@ -11,11 +11,18 @@ Main3dDraw::Main3dDraw(
 	drawables = std::vector<std::shared_ptr<sf::Drawable>>();
 
 	rays = std::make_shared<std::vector<sf::Vector2f>>();
+	whatBlockRayIntersect = std::vector<int>();
 	angles = std::vector<float>();
 
 	verticalRectangles = std::vector<std::shared_ptr<sf::RectangleShape>>();
 	wallTexture = std::make_shared<sf::Texture>();
 	wallTexture->loadFromFile("Images/wall1.png");
+
+	wallTextures = std::vector<std::shared_ptr<sf::Texture>>();
+	wallTextures.push_back(std::make_shared<sf::Texture>());
+	wallTextures[0]->loadFromFile("Images/wall1.png");
+	wallTextures.push_back(std::make_shared<sf::Texture>());
+	wallTextures[1]->loadFromFile("Images/wall2.png");
 
 	for (size_t i = 0; i < raysQuantity * 2; i++)
 	{
@@ -27,7 +34,7 @@ Main3dDraw::Main3dDraw(
 			1280 - verticalRectangles[i]->getSize().x * i,
 			720 / 2.f
 		));
-		verticalRectangles[i]->setTexture(wallTexture.get());
+		verticalRectangles[i]->setTexture(wallTextures[0].get());
 		drawables.push_back(verticalRectangles[i]);
 	}
 
@@ -61,7 +68,8 @@ void Main3dDraw::generateVerticalRectabgles()
 {
 	for (size_t i = 0; i < verticalRectangles.size(); i++)
 	{
-		if (length((*rays)[i] - getPlayerPosition()) + 1 >= rayLength)
+		if (length((*rays)[i] - getPlayerPosition()) + 1 >= rayLength || 
+			whatBlockRayIntersect[i] == 0)
 		{
 			verticalRectangles[i]->setSize(sf::Vector2f(
 				verticalRectangles[i]->getSize().x, 0));
@@ -75,17 +83,21 @@ void Main3dDraw::generateVerticalRectabgles()
 
 			if ((*rays)[i].x == (float)(int)(*rays)[i].x)
 			{
+				verticalRectangles[i]->setTexture(
+					wallTextures[whatBlockRayIntersect[i] - 1].get());
 				verticalRectangles[i]->setTextureRect(sf::IntRect(
-					((*rays)[i].y - (int)(*rays)[i].y) * 1200, 0,
+					((*rays)[i].y - (int)(*rays)[i].y) * wallTexture->getSize().x, 0,
 					10 / (length((*rays)[i] - getPlayerPosition()) * cos(angles[i])),
-						1200));
+					wallTexture->getSize().y));
 			}
 			else
 			{
+				verticalRectangles[i]->setTexture(
+					wallTextures[whatBlockRayIntersect[i] - 1].get());
 				verticalRectangles[i]->setTextureRect(sf::IntRect(
-					((*rays)[i].x - (int)(*rays)[i].x) * 1200, 0,
+					((*rays)[i].x - (int)(*rays)[i].x) * wallTexture->getSize().x, 0,
 					10 / (length((*rays)[i] - getPlayerPosition()) * cos(angles[i])),
-					1200));
+					wallTexture->getSize().y));
 			}
 
 		}
@@ -97,18 +109,24 @@ void Main3dDraw::generateVerticalRectabgles()
 	}
 }
 
-sf::Vector2f Main3dDraw::setIntersectionPosistion(int rayNumber, sf::Vector2f interSectionPosition)
+sf::Vector2f Main3dDraw::setIntersectionPosistion(
+	int rayNumber, sf::Vector2f interSectionPosition, int blockNumber)
 {
 	float len1 = length((*rays)[rayNumber] - getPlayerPosition());
 	float len2 = length(interSectionPosition - getPlayerPosition());
 	if (len1 > len2)
+	{
+		whatBlockRayIntersect[rayNumber] = blockNumber;
 		return interSectionPosition;
+	}
 	else
+	{
 		return (*rays)[rayNumber];
+	}
 }
 
 void Main3dDraw::checkIntersectionRightDown(sf::Vector2f cubePosition,
-	float k, float b, float pointY1, float pointY2, int i)
+	float k, float b, float pointY1, float pointY2, int i, int blockNumber)
 {
 	if (pointY2 < cubePosition.y ||
 		getPlayerPosition().y > cubePosition.y + 1 ||
@@ -116,17 +134,17 @@ void Main3dDraw::checkIntersectionRightDown(sf::Vector2f cubePosition,
 	if (pointY1 < cubePosition.y && pointY2 > cubePosition.y)
 	{
 		(*rays)[i] = setIntersectionPosistion(i,
-			sf::Vector2f((cubePosition.y - b) / k, cubePosition.y));
+			sf::Vector2f((cubePosition.y - b) / k, cubePosition.y), blockNumber);
 	}
 	else if (pointY1 < cubePosition.y + 1 && pointY1 > cubePosition.y)
 	{
 		(*rays)[i] = setIntersectionPosistion(i,
-			sf::Vector2f(cubePosition.x, pointY1));
+			sf::Vector2f(cubePosition.x, pointY1), blockNumber);
 	}
 }
 
 void Main3dDraw::checkIntersectionRightUp(sf::Vector2f cubePosition,
-	float k, float b, float pointY1, float pointY2, int i)
+	float k, float b, float pointY1, float pointY2, int i, int blockNumber)
 {
 	if (pointY1 < cubePosition.y ||
 		getPlayerPosition().y < cubePosition.y ||
@@ -135,17 +153,17 @@ void Main3dDraw::checkIntersectionRightUp(sf::Vector2f cubePosition,
 	if (pointY1 >= cubePosition.y + 1 && pointY2 < cubePosition.y + 1)
 	{
 		(*rays)[i] = setIntersectionPosistion(i,
-			sf::Vector2f((cubePosition.y + 1 - b) / k, cubePosition.y + 1));
+			sf::Vector2f((cubePosition.y + 1 - b) / k, cubePosition.y + 1), blockNumber);
 	}
 	else if (pointY1 > cubePosition.y && pointY1 < cubePosition.y + 1)
 	{
 		(*rays)[i] = setIntersectionPosistion(i,
-			sf::Vector2f(cubePosition.x, pointY1));
+			sf::Vector2f(cubePosition.x, pointY1), blockNumber);
 	}
 }
 
 void Main3dDraw::checkIntersectionLeftDown(sf::Vector2f cubePosition,
-	float k, float b, float pointY1, float pointY2, int i)
+	float k, float b, float pointY1, float pointY2, int i, int blockNumber)
 {
 	if (pointY2 > cubePosition.y + 1 ||
 		getPlayerPosition().y > cubePosition.y + 1 ||
@@ -153,17 +171,17 @@ void Main3dDraw::checkIntersectionLeftDown(sf::Vector2f cubePosition,
 	if (pointY2 < cubePosition.y && pointY1 > cubePosition.y)
 	{
 		(*rays)[i] = setIntersectionPosistion(i,
-			sf::Vector2f((cubePosition.y - b) / k, cubePosition.y));
+			sf::Vector2f((cubePosition.y - b) / k, cubePosition.y), blockNumber);
 	}
 	else if (pointY2 < cubePosition.y + 1 && pointY2 > cubePosition.y)
 	{
 		(*rays)[i] = setIntersectionPosistion(i,
-			sf::Vector2f(cubePosition.x + 1, pointY2));
+			sf::Vector2f(cubePosition.x + 1, pointY2), blockNumber);
 	}
 }
 
 void Main3dDraw::checkIntersectionLeftUp(sf::Vector2f cubePosition,
-	float k, float b, float pointY1, float pointY2, int i)
+	float k, float b, float pointY1, float pointY2, int i, int blockNumber)
 {
 	if (pointY1 > cubePosition.y + 1 ||
 		getPlayerPosition().y < cubePosition.y ||
@@ -172,16 +190,16 @@ void Main3dDraw::checkIntersectionLeftUp(sf::Vector2f cubePosition,
 	if (pointY2 >= cubePosition.y + 1 && pointY1 < cubePosition.y + 1)
 	{
 		(*rays)[i] = setIntersectionPosistion(i,
-			sf::Vector2f((cubePosition.y + 1 - b) / k, cubePosition.y + 1));
+			sf::Vector2f((cubePosition.y + 1 - b) / k, cubePosition.y + 1), blockNumber);
 	}
 	else if (pointY2 < cubePosition.y + 1 && pointY2 > cubePosition.y)
 	{
 		(*rays)[i] = setIntersectionPosistion(i,
-			sf::Vector2f(cubePosition.x + 1, pointY2));
+			sf::Vector2f(cubePosition.x + 1, pointY2), blockNumber);
 	}
 }
 
-void Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
+void Main3dDraw::checkIntersection(sf::Vector2f cubePosition, int blockNumber)
 {
 	for (size_t i = 0; i < (*rays).size(); i++)
 	{
@@ -195,19 +213,19 @@ void Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 		{
 			if ((*rays)[i].x > getPlayerPosition().x)
 				checkIntersectionRightDown(cubePosition,
-					k, b, pointY1, pointY2, i);
+					k, b, pointY1, pointY2, i, blockNumber);
 			else
 				checkIntersectionLeftUp(cubePosition,
-					k, b, pointY1, pointY2, i);
+					k, b, pointY1, pointY2, i, blockNumber);
 		}
 		else
 		{
 			if ((*rays)[i].x > getPlayerPosition().x)
 				checkIntersectionRightUp(cubePosition,
-					k, b, pointY1, pointY2, i);
+					k, b, pointY1, pointY2, i, blockNumber);
 			else
 				checkIntersectionLeftDown(cubePosition,
-					k, b, pointY1, pointY2, i);
+					k, b, pointY1, pointY2, i, blockNumber);
 		}
 	}
 }
@@ -215,9 +233,11 @@ void Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 void Main3dDraw::next()
 {
 	(*rays).clear();
+	whatBlockRayIntersect.clear();
 	angles.clear();
 	for (int i = raysQuantity * -1; i < raysQuantity; i++)
 	{
+		whatBlockRayIntersect.push_back(0);
 		float angle = getPlayerAngle() + PI / 2.f / raysQuantity / 2 * (i);
 		angles.push_back(PI / 2 / raysQuantity / 2 * (i));
 		(*rays).push_back(getPlayerPosition() + sf::Vector2f(rayLength * sin(angle), rayLength * cos(angle)));
@@ -227,8 +247,8 @@ void Main3dDraw::next()
 	{
 		for (int j = 0; j < (*map).size(); j++)
 		{
-			if ((*map)[i][j] == 1)
-				checkIntersection(sf::Vector2f(j, i));
+			if ((*map)[i][j] != 0)
+				checkIntersection(sf::Vector2f(j, i), (*map)[i][j]);
 		}
 	}
 	generateVerticalRectabgles();
