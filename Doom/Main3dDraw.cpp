@@ -11,6 +11,22 @@ Main3dDraw::Main3dDraw(
 	drawables = std::vector<std::shared_ptr<sf::Drawable>>();
 
 	rays = std::vector<sf::Vector2f>();
+	angles = std::vector<float>();
+
+	verticalRectangles = std::vector<std::shared_ptr<sf::RectangleShape>>();
+
+	for (size_t i = 0; i < raysQuantity * 2; i++)
+	{
+		verticalRectangles.push_back(std::make_shared<sf::RectangleShape>());
+		verticalRectangles[i]->setSize(sf::Vector2f(1280 / (float)raysQuantity / 2.f, 0));
+		verticalRectangles[i]->setOrigin(sf::Vector2f(verticalRectangles[i]->getSize().x / 2, 0));
+		verticalRectangles[i]->setFillColor(sf::Color::White);
+		verticalRectangles[i]->setPosition(sf::Vector2f(
+			1280 - verticalRectangles[i]->getSize().x * i,
+			720 / 2.f
+		));
+		drawables.push_back(verticalRectangles[i]);
+	}
 
 	map = std::make_shared<std::vector<std::vector<int>>>(_map);
 
@@ -29,17 +45,32 @@ Main3dDraw::Main3dDraw(
 
 }
 
-void Main3dDraw::generateVerticalRectabgles()
-{
-	for (size_t i = 0; i < rays.size(); i++)
-	{
-		if (length(rays[i]) + 1 >= rayLength) continue;
-	}
-}
-
 float Main3dDraw::length(sf::Vector2f vector)
 {
 	return sqrtf(vector.x * vector.x + vector.y * vector.y);
+}
+
+void Main3dDraw::generateVerticalRectabgles()
+{
+	for (size_t i = 0; i < verticalRectangles.size(); i++)
+	{
+		if (length(rays[i] - getPlayerPosition()) + 1 >= rayLength)
+		{
+			verticalRectangles[i]->setSize(sf::Vector2f(
+				verticalRectangles[i]->getSize().x, 0));
+		}
+		else
+		{
+			verticalRectangles[i]->setSize(sf::Vector2f(
+				verticalRectangles[i]->getSize().x,
+				600 / length(rays[i] - getPlayerPosition()) / cos(angles[i])));
+		}
+		
+		verticalRectangles[i]->setOrigin(
+			verticalRectangles[i]->getSize() / 2.f
+		);
+
+	}
 }
 
 sf::Vector2f Main3dDraw::setIntersectionPosistion(int rayNumber, sf::Vector2f interSectionPosition)
@@ -160,9 +191,11 @@ void Main3dDraw::checkIntersection(sf::Vector2f cubePosition)
 void Main3dDraw::next()
 {
 	rays.clear();
+	angles.clear();
 	for (int i = raysQuantity * -1; i < raysQuantity; i++)
 	{
 		float angle = getPlayerAngle() + PI / 2 / raysQuantity / 2 * (i);
+		angles.push_back(PI / 2 / raysQuantity / 2 * (i));
 		rays.push_back(getPlayerPosition() + sf::Vector2f(rayLength * sin(angle), rayLength * cos(angle)));
 	}
 
@@ -171,36 +204,32 @@ void Main3dDraw::next()
 		for (int j = 0; j < (*map).size(); j++)
 		{
 			if ((*map)[i][j] == 1)
-			{
 				checkIntersection(sf::Vector2f(j, i));
-			}
 		}
 	}
+	generateVerticalRectabgles();
 }
 
 void Main3dDraw::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	sf::Vertex line[2];
 	line[0] = sf::Vertex(getPlayerPixelPosition());
+	line[0].color = sf::Color::Red;
 
 	std::vector<sf::Vector2f> drawableRays = std::vector<sf::Vector2f>();
-
-	/*sf::CircleShape shape = sf::CircleShape(5);
-	shape.setOrigin(shape.getRadius(), shape.getRadius());
-
-	for (size_t i = 0; i < intersectionsPositions.size(); i++)
-	{
-		shape.setPosition(intersectionsPositions[i] * 20.f + sf::Vector2f(0, 520));
-		target.draw(shape, states);
-	}*/
 
 	for (int i = raysQuantity * -1; i < raysQuantity; i++)
 	{
 		drawableRays.push_back((rays[i + raysQuantity] - getPlayerPosition()) * 20.f + line[0].position);
 
-		line[1] = sf::Vertex(drawableRays[i + raysQuantity]);
+		line[1] = sf::Vertex(drawableRays[i + raysQuantity], sf::Color::Red);
 
 		target.draw(line, 2, sf::Lines);
+	}
+
+	for (auto drawable : drawables)
+	{
+		target.draw(*drawable, states);
 	}
 }
 

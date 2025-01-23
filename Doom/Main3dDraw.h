@@ -14,18 +14,21 @@ class Main3dDraw : public sf::Drawable, public Nextable
 private:
 	const int rayLength = 100;
 	const int drawableRayLength = 100;
-	const int raysQuantity = 100;
+	const int raysQuantity = 300;
 
 	std::vector<std::shared_ptr<sf::Drawable>> drawables;
 
 	std::shared_ptr<std::vector<std::vector<int>>> map;
 	std::vector<sf::Vector2f> rays;
+	std::vector<float> angles;
+
+	std::vector<std::shared_ptr<sf::RectangleShape>> verticalRectangles;
 
 	std::function<sf::Vector2f()> getPlayerPosition;
 	std::function<float()> getPlayerAngle;
 	std::function<sf::Vector2f()> getPlayerPixelPosition;
 
-	float length(sf::Vector2f vector);
+	static float length(sf::Vector2f vector);
 
 	sf::Vector2f setIntersectionPosistion(int rayNumber, sf::Vector2f interSectionPosition);
 
