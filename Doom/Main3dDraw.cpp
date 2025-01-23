@@ -14,6 +14,8 @@ Main3dDraw::Main3dDraw(
 	angles = std::vector<float>();
 
 	verticalRectangles = std::vector<std::shared_ptr<sf::RectangleShape>>();
+	wallTexture = std::make_shared<sf::Texture>();
+	wallTexture->loadFromFile("Images/wall1.png");
 
 	for (size_t i = 0; i < raysQuantity * 2; i++)
 	{
@@ -25,6 +27,7 @@ Main3dDraw::Main3dDraw(
 			1280 - verticalRectangles[i]->getSize().x * i,
 			720 / 2.f
 		));
+		verticalRectangles[i]->setTexture(wallTexture.get());
 		drawables.push_back(verticalRectangles[i]);
 	}
 
@@ -68,7 +71,23 @@ void Main3dDraw::generateVerticalRectabgles()
 			verticalRectangles[i]->setSize(sf::Vector2f(
 				verticalRectangles[i]->getSize().x,
 				600 / (length((*rays)[i] - getPlayerPosition())
-					* 1)));
+					* cos(angles[i]))));
+
+			if ((*rays)[i].x == (float)(int)(*rays)[i].x)
+			{
+				verticalRectangles[i]->setTextureRect(sf::IntRect(
+					((*rays)[i].y - (int)(*rays)[i].y) * 1200, 0,
+					10 / (length((*rays)[i] - getPlayerPosition()) * cos(angles[i])),
+						1200));
+			}
+			else
+			{
+				verticalRectangles[i]->setTextureRect(sf::IntRect(
+					((*rays)[i].x - (int)(*rays)[i].x) * 1200, 0,
+					10 / (length((*rays)[i] - getPlayerPosition()) * cos(angles[i])),
+					1200));
+			}
+
 		}
 		
 		verticalRectangles[i]->setOrigin(
