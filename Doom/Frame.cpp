@@ -23,6 +23,9 @@ Frame::Frame()
 	nextables.push_back(player);
 	drawables.push_back(player);
 
+	enemies = std::vector<std::shared_ptr<Enemy>>();
+	enemies.push_back(std::make_shared<Enemy>(sf::Vector2f(2, 3)));
+
 	miniMap = std::make_shared<MiniMap>(
 		[&]() { return player->getPixelPosition(); },
 		[&]() { return player->getAngle(); },
@@ -103,11 +106,6 @@ sf::Vector2f Frame::checkInterseption(sf::Vector2f position11, sf::Vector2f posi
 	sf::Vector2f interseptionPosition = findIntersection(
 		position11, position12, position21, position22
 	);
-
-	int a[2];
-
-	//a[1];
-	//*(a + 1);
 
 	if (checkPointInQuadrilateral(
 		interseptionPosition,

@@ -15,7 +15,7 @@ class Main3dDraw : public sf::Drawable, public Nextable
 private:
 	const int rayLength = 100;
 	const int drawableRayLength = 100;
-	const int raysQuantity = 150;
+	const int raysQuantity = 300;
 
 	std::vector<std::shared_ptr<sf::Drawable>> drawables;
 

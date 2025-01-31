@@ -17,14 +17,20 @@ class Player : public sf::Drawable, public Nextable, public PositionHavier
 
 	const float speed = 0.05f;
 
+	void borderControl();
+
+	bool moveDiagonal();
+
+	void moveStraight();
+
+	void move();
+
 public:
 	Player();
 
 	sf::Vector2f getPixelPosition();
 	sf::Vector2f getPosition();
 	float getAngle();
-
-	void move();
 
 	void next() override;
 

@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="Doom.cpp" />
     <ClCompile Include="DrawRaysOnMiniMap.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="GameCycle.cpp" />
     <ClCompile Include="Main3dDraw.cpp" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="Constants.h" />
     <ClInclude Include="DrawRaysOnMiniMap.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="GameCycle.h" />
     <ClInclude Include="Main3dDraw.h" />

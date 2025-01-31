@@ -32,7 +32,6 @@ MiniMap::MiniMap(
 
 void MiniMap::next()
 {
-	//playerShape->setPosition(getPlayerPosition() * 20.f + sf::Vector2f(0, 520));
 	playerShape->setPosition(getPlayerPixelPosition());
 }
 
@@ -42,7 +41,7 @@ void MiniMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		for (size_t j = 0; j < (*map)[i].size(); j++)
 		{
-			if ((*map)[j][i] == 1)
+			if ((*map)[j][i] != 0)
 			{
 				blockShape->setPosition(borderShape->getPosition() + sf::Vector2f(20 * i, 20 * j));
 				target.draw(*blockShape, states);

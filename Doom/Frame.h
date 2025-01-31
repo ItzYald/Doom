@@ -10,6 +10,7 @@
 #include "Nextable.h"
 
 #include "Player.h"
+#include "Enemy.h"
 #include "MiniMap.h"
 
 #include "Main3dDraw.h"
@@ -20,6 +21,7 @@ class Frame : public Nextable, public sf::Drawable
 {
 private:
 	std::shared_ptr<Player> player;
+	std::vector<std::shared_ptr<Enemy>> enemies;
 	std::shared_ptr<MiniMap> miniMap;
 	std::shared_ptr<Main3dDraw> main3dDraw;
 

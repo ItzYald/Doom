@@ -232,7 +232,7 @@ void Main3dDraw::checkIntersection(sf::Vector2f cubePosition, int blockNumber)
 
 void Main3dDraw::next()
 {
-	(*rays).clear();
+	rays->clear();
 	whatBlockRayIntersect.clear();
 	angles.clear();
 	for (int i = raysQuantity * -1; i < raysQuantity; i++)
